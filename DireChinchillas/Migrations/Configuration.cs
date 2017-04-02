@@ -1,8 +1,9 @@
 namespace DireChinchillas.Migrations
 {
+    using DireChinchillas.DbAccess;
     using System.Data.Entity.Migrations;
 
-    internal sealed class Configuration : DbMigrationsConfiguration<DireChinchillas.Models.ApplicationDbContext>
+    internal sealed class Configuration : DbMigrationsConfiguration<ApplicationDbContext>
     {
         public Configuration()
         {
@@ -11,7 +12,7 @@ namespace DireChinchillas.Migrations
             ContextKey = "DireChinchillas.Models.ApplicationDbContext";
         }
 
-        protected override void Seed(DireChinchillas.Models.ApplicationDbContext context)
+        protected override void Seed(ApplicationDbContext context)
         {
             //  This method will be called after migrating to the latest version.
 
@@ -21,12 +22,14 @@ namespace DireChinchillas.Migrations
             context.ColorMutations.AddOrUpdate(
               new Models.ColourMutation
               {
+                  ColourId = 0,
                   Name = "Brown Velvet",
                   BeigeGene = Enums.BeigeGenes.HeteroBeige,
                   TovGene = Enums.TovGenes.VelvetTOV
               },
               new Models.ColourMutation
               {
+                  ColourId = 1,
                   Name = "Pink White TOV",
                   BeigeGene = Enums.BeigeGenes.HeteroBeige,
                   WhiteGene = Enums.WhiteGenes.White,
@@ -34,6 +37,7 @@ namespace DireChinchillas.Migrations
               },
               new Models.ColourMutation
               {
+                  ColourId = 2,
                   Name = "Standard"
               }
             );

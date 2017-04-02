@@ -1,23 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Data.Entity;
-using System.Linq;
+﻿using System.Linq;
 using System.Net;
-using System.Web;
 using System.Web.Mvc;
 using DireChinchillas.Models;
+using DireChinchillas.DbAccess;
 
 namespace DireChinchillas.Controllers
 {
     public class HomeController : Controller
     {
-        private ApplicationDbContext db = new ApplicationDbContext();
+        private DbRepository _repository = new DbRepository(new ApplicationDbContext());
 
         // GET: Home
         public ActionResult Index()
         {
-            var chinchillas = db.Chinchillas.Include(c => c.Colour).Include(c => c.Father).Include(c => c.Mother);
+            var chinchillas = _repository.GetAllChinchillas();
             return View(chinchillas.ToList());
         }
 
@@ -28,7 +24,8 @@ namespace DireChinchillas.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Chinchilla chinchilla = db.Chinchillas.Find(id);
+
+            Chinchilla chinchilla = _repository.GetChinchillaById(id.Value);
             if (chinchilla == null)
             {
                 return HttpNotFound();
@@ -39,9 +36,9 @@ namespace DireChinchillas.Controllers
         // GET: Home/Create
         public ActionResult Create()
         {
-            ViewBag.ColourId = new SelectList(db.ColorMutations, "ColourId", "Name");
-            ViewBag.FatherId = new SelectList(db.Chinchillas, "ChinchillaId", "Name");
-            ViewBag.MotherId = new SelectList(db.Chinchillas, "ChinchillaId", "Name");
+            ViewBag.ColourId = new SelectList(_repository.GetAllColours(), "ColourId", "Name");
+            ViewBag.FatherId = new SelectList(_repository.GetChinchillaBySex(Enums.SexTypes.Male), "ChinchillaId", "Name");
+            ViewBag.MotherId = new SelectList(_repository.GetChinchillaBySex(Enums.SexTypes.Female), "ChinchillaId", "Name");
             return View();
         }
 
@@ -54,14 +51,14 @@ namespace DireChinchillas.Controllers
         {
             if (ModelState.IsValid)
             {
-                db.Chinchillas.Add(chinchilla);
-                db.SaveChanges();
+                _repository.AddChinchilla(chinchilla);
+                _repository.SaveChanges();
                 return RedirectToAction("Index");
             }
 
-            ViewBag.ColourId = new SelectList(db.ColorMutations, "ColourId", "Name", chinchilla.ColourId);
-            ViewBag.FatherId = new SelectList(db.Chinchillas, "ChinchillaId", "Name", chinchilla.FatherId);
-            ViewBag.MotherId = new SelectList(db.Chinchillas, "ChinchillaId", "Name", chinchilla.MotherId);
+            ViewBag.ColourId = new SelectList(_repository.GetAllColours(), "ColourId", "Name", chinchilla.ColourId);
+            ViewBag.FatherId = new SelectList(_repository.GetChinchillaBySex(Enums.SexTypes.Male), "ChinchillaId", "Name", chinchilla.FatherId);
+            ViewBag.MotherId = new SelectList(_repository.GetChinchillaBySex(Enums.SexTypes.Female), "ChinchillaId", "Name", chinchilla.MotherId);
             return View(chinchilla);
         }
 
@@ -72,14 +69,15 @@ namespace DireChinchillas.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Chinchilla chinchilla = db.Chinchillas.Find(id);
+
+            Chinchilla chinchilla = _repository.GetChinchillaById(id.Value);
             if (chinchilla == null)
             {
                 return HttpNotFound();
             }
-            ViewBag.ColourId = new SelectList(db.ColorMutations, "ColourId", "Name", chinchilla.ColourId);
-            ViewBag.FatherId = new SelectList(db.Chinchillas, "ChinchillaId", "Name", chinchilla.FatherId);
-            ViewBag.MotherId = new SelectList(db.Chinchillas, "ChinchillaId", "Name", chinchilla.MotherId);
+            ViewBag.ColourId = new SelectList(_repository.GetAllColours(), "ColourId", "Name", chinchilla.ColourId);
+            ViewBag.FatherId = new SelectList(_repository.GetChinchillaBySex(Enums.SexTypes.Male), "ChinchillaId", "Name", chinchilla.FatherId);
+            ViewBag.MotherId = new SelectList(_repository.GetChinchillaBySex(Enums.SexTypes.Female), "ChinchillaId", "Name", chinchilla.MotherId);
             return View(chinchilla);
         }
 
@@ -92,13 +90,13 @@ namespace DireChinchillas.Controllers
         {
             if (ModelState.IsValid)
             {
-                db.Entry(chinchilla).State = EntityState.Modified;
-                db.SaveChanges();
+                _repository.Modify(chinchilla);
+                _repository.SaveChanges();
                 return RedirectToAction("Index");
             }
-            ViewBag.ColourId = new SelectList(db.ColorMutations, "ColourId", "Name", chinchilla.ColourId);
-            ViewBag.FatherId = new SelectList(db.Chinchillas, "ChinchillaId", "Name", chinchilla.FatherId);
-            ViewBag.MotherId = new SelectList(db.Chinchillas, "ChinchillaId", "Name", chinchilla.MotherId);
+            ViewBag.ColourId = new SelectList(_repository.GetAllColours(), "ColourId", "Name", chinchilla.ColourId);
+            ViewBag.FatherId = new SelectList(_repository.GetChinchillaBySex(Enums.SexTypes.Male), "ChinchillaId", "Name", chinchilla.FatherId);
+            ViewBag.MotherId = new SelectList(_repository.GetChinchillaBySex(Enums.SexTypes.Female), "ChinchillaId", "Name", chinchilla.MotherId);
             return View(chinchilla);
         }
 
@@ -109,7 +107,8 @@ namespace DireChinchillas.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Chinchilla chinchilla = db.Chinchillas.Find(id);
+
+            Chinchilla chinchilla = _repository.GetChinchillaById(id.Value);
             if (chinchilla == null)
             {
                 return HttpNotFound();
@@ -122,9 +121,9 @@ namespace DireChinchillas.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            Chinchilla chinchilla = db.Chinchillas.Find(id);
-            db.Chinchillas.Remove(chinchilla);
-            db.SaveChanges();
+            Chinchilla chinchilla = _repository.GetChinchillaById(id);
+            _repository.RemoveChinchilla(chinchilla);
+            _repository.SaveChanges();
             return RedirectToAction("Index");
         }
 
@@ -132,7 +131,7 @@ namespace DireChinchillas.Controllers
         {
             if (disposing)
             {
-                db.Dispose();
+                _repository.Dispose();
             }
             base.Dispose(disposing);
         }

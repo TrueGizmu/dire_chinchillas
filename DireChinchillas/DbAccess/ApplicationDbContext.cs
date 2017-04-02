@@ -1,7 +1,8 @@
-﻿using Microsoft.AspNet.Identity.EntityFramework;
+﻿using DireChinchillas.Models;
+using Microsoft.AspNet.Identity.EntityFramework;
 using System.Data.Entity;
 
-namespace DireChinchillas.Models
+namespace DireChinchillas.DbAccess
 {
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {

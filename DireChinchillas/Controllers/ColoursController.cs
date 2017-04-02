@@ -1,23 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Data.Entity;
-using System.Linq;
+﻿using System.Data.Entity;
 using System.Net;
-using System.Web;
 using System.Web.Mvc;
 using DireChinchillas.Models;
+using DireChinchillas.DbAccess;
 
 namespace DireChinchillas.Controllers
 {
     public class ColoursController : Controller
     {
-        private ApplicationDbContext db = new ApplicationDbContext();
+        private DbRepository _repository = new DbRepository(new ApplicationDbContext());
 
         // GET: Colours
         public ActionResult Index()
         {
-            return View(db.ColorMutations.ToList());
+            return View(_repository.GetAllColours());
         }
 
         // GET: Colours/Details/5
@@ -27,7 +23,7 @@ namespace DireChinchillas.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            ColourMutation colourMutation = db.ColorMutations.Find(id);
+            ColourMutation colourMutation = _repository.GetColourById(id.Value);
             if (colourMutation == null)
             {
                 return HttpNotFound();
@@ -50,8 +46,8 @@ namespace DireChinchillas.Controllers
         {
             if (ModelState.IsValid)
             {
-                db.ColorMutations.Add(colourMutation);
-                db.SaveChanges();
+                _repository.AddColour(colourMutation);
+                _repository.SaveChanges();
                 return RedirectToAction("Index");
             }
 
@@ -65,7 +61,7 @@ namespace DireChinchillas.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            ColourMutation colourMutation = db.ColorMutations.Find(id);
+            ColourMutation colourMutation = _repository.GetColourById(id.Value);
             if (colourMutation == null)
             {
                 return HttpNotFound();
@@ -82,8 +78,8 @@ namespace DireChinchillas.Controllers
         {
             if (ModelState.IsValid)
             {
-                db.Entry(colourMutation).State = EntityState.Modified;
-                db.SaveChanges();
+                _repository.Modify(colourMutation);
+                _repository.SaveChanges();
                 return RedirectToAction("Index");
             }
             return View(colourMutation);
@@ -96,7 +92,7 @@ namespace DireChinchillas.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            ColourMutation colourMutation = db.ColorMutations.Find(id);
+            ColourMutation colourMutation = _repository.GetColourById(id.Value);
             if (colourMutation == null)
             {
                 return HttpNotFound();
@@ -109,9 +105,9 @@ namespace DireChinchillas.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            ColourMutation colourMutation = db.ColorMutations.Find(id);
-            db.ColorMutations.Remove(colourMutation);
-            db.SaveChanges();
+            ColourMutation colourMutation = _repository.GetColourById(id);
+            _repository.RemoveColour(colourMutation);
+            _repository.SaveChanges();
             return RedirectToAction("Index");
         }
 
@@ -119,7 +115,7 @@ namespace DireChinchillas.Controllers
         {
             if (disposing)
             {
-                db.Dispose();
+                _repository.Dispose();
             }
             base.Dispose(disposing);
         }

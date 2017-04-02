@@ -204,6 +204,7 @@
     <Compile Include="Controllers\ColoursController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
+    <Compile Include="DbAccess\DbRepository.cs" />
     <Compile Include="Enums\SexTypes.cs" />
     <Compile Include="Enums\RecessiveGenes.cs" />
     <Compile Include="Enums\EbonyGenes.cs" />
@@ -220,7 +221,7 @@
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
-    <Compile Include="Models\ApplicationDbContext.cs" />
+    <Compile Include="DbAccess\ApplicationDbContext.cs" />
     <Compile Include="Models\Chinchilla.cs" />
     <Compile Include="Models\ColorMutation.cs" />
     <Compile Include="Models\IdentityModels.cs" />
