@@ -76,8 +76,8 @@ namespace DireChinchillas.Controllers
                 return HttpNotFound();
             }
             ViewBag.ColourId = new SelectList(_repository.GetAllColours(), "ColourId", "Name", chinchilla.ColourId);
-            ViewBag.FatherId = new SelectList(_repository.GetChinchillaBySex(Enums.SexTypes.Male), "ChinchillaId", "Name", chinchilla.FatherId);
-            ViewBag.MotherId = new SelectList(_repository.GetChinchillaBySex(Enums.SexTypes.Female), "ChinchillaId", "Name", chinchilla.MotherId);
+            ViewBag.FatherId = new SelectList(_repository.GetChinchillaBySex(Enums.SexTypes.Male, chinchilla.ChinchillaId), "ChinchillaId", "Name", chinchilla.FatherId);
+            ViewBag.MotherId = new SelectList(_repository.GetChinchillaBySex(Enums.SexTypes.Female, chinchilla.ChinchillaId), "ChinchillaId", "Name", chinchilla.MotherId);
             return View(chinchilla);
         }
 
@@ -95,8 +95,8 @@ namespace DireChinchillas.Controllers
                 return RedirectToAction("Index");
             }
             ViewBag.ColourId = new SelectList(_repository.GetAllColours(), "ColourId", "Name", chinchilla.ColourId);
-            ViewBag.FatherId = new SelectList(_repository.GetChinchillaBySex(Enums.SexTypes.Male), "ChinchillaId", "Name", chinchilla.FatherId);
-            ViewBag.MotherId = new SelectList(_repository.GetChinchillaBySex(Enums.SexTypes.Female), "ChinchillaId", "Name", chinchilla.MotherId);
+            ViewBag.FatherId = new SelectList(_repository.GetChinchillaBySex(Enums.SexTypes.Male, chinchilla.ChinchillaId), "ChinchillaId", "Name", chinchilla.FatherId);
+            ViewBag.MotherId = new SelectList(_repository.GetChinchillaBySex(Enums.SexTypes.Female, chinchilla.ChinchillaId), "ChinchillaId", "Name", chinchilla.MotherId);
             return View(chinchilla);
         }
 

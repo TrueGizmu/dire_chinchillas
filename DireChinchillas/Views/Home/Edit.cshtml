@@ -22,16 +22,18 @@
             <div class="col-md-10">
                 <div class="btn-group" data-toggle="buttons" role="group">
                     <label class="btn btn-primary">
-                        @Html.RadioButtonFor(model => model.Sex, DireChinchillas.Enums.SexTypes.Unknown) Unknown
+                        <i class="fa fa-venus-mars fa-lg"></i>
+                        @Html.RadioButtonFor(model => model.Sex, DireChinchillas.Enums.SexTypes.Unknown)  Unknown
                     </label>
                     <label class="btn btn-primary">
-                        @Html.RadioButtonFor(model => model.Sex, DireChinchillas.Enums.SexTypes.Male) Male
+                        <i class="fa fa-mars fa-lg"></i>
+                        @Html.RadioButtonFor(model => model.Sex, DireChinchillas.Enums.SexTypes.Male)  Male
                     </label>
                     <label class="btn btn-primary">
-                        @Html.RadioButtonFor(model => model.Sex, DireChinchillas.Enums.SexTypes.Female) Female
+                        <i class="fa fa-venus fa-lg"></i>
+                        @Html.RadioButtonFor(model => model.Sex, DireChinchillas.Enums.SexTypes.Female)  Female
                     </label>
                 </div>
-                @*@Html.EnumDropDownListFor(model => model.Sex, htmlAttributes: new { @class = "form-control" })*@
                 @Html.ValidationMessageFor(model => model.Sex, "", new { @class = "text-danger" })
             </div>
         </div>
@@ -105,5 +107,6 @@
 </div>
 
 @section Scripts {
+    <script>$(':input:checked').parent('.btn').addClass('active');</script>
     @Scripts.Render("~/bundles/jqueryval")
 }

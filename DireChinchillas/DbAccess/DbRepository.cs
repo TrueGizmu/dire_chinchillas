@@ -26,9 +26,12 @@ namespace DireChinchillas.DbAccess
             return _context.Chinchillas.Find(id);
         }
 
-        public List<Chinchilla> GetChinchillaBySex(Enums.SexTypes sex)
+        public List<Chinchilla> GetChinchillaBySex(Enums.SexTypes sex, int? exclude = null)
         {
-            return _context.Chinchillas.Where(c => c.Sex == sex).ToList();
+            var chinchillas = _context.Chinchillas.Where(c => c.Sex == sex);
+            if (exclude != null)
+                chinchillas = chinchillas.Where(c => c.ChinchillaId != exclude);
+            return chinchillas.ToList();
         }
 
         public void AddChinchilla(Chinchilla newChin)
