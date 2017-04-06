@@ -9,7 +9,7 @@ namespace DireChinchillas.Migrations
         {
             AutomaticMigrationsEnabled = true;
             AutomaticMigrationDataLossAllowed = true;
-            ContextKey = "DireChinchillas.Models.ApplicationDbContext";
+            ContextKey = "DireChinchillas.DbAccess.ApplicationDbContext";
         }
 
         protected override void Seed(ApplicationDbContext context)
